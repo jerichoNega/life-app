@@ -71,7 +71,7 @@ h2 small { font: 400 0.85rem var(--f-body); color: var(--muted); }
 .cards { display: grid; gap: 12px; }
 .card { background: var(--card); border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 1px 0 var(--line), 0 8px 24px -18px rgba(60,40,20,.35);
   border-left: 5px solid var(--slot, var(--accent)); }
-.card.done, .card.skipped { opacity: .62; }
+.card.s-done, .card.s-skipped { opacity: .62; }
 .head { display: grid; gap: 6px; cursor: pointer; }
 .slot { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--slot); }
 .name { font: 650 1.25rem/1.25 var(--f-display); margin: 0; }
@@ -232,7 +232,7 @@ const backend = {
 function renderCard(c, i) {
   const r = ledger[c.id] || {}, st = r.status || "open", open = openCards.has(c.id);
   const color = `var(--${SLOTS[c.slot] ? c.slot : "stretch"})`;
-  return `<article class="card ${st} ${open ? "open" : ""} rise" style="--slot:${color};animation-delay:${i * 60}ms" data-id="${esc(c.id)}">
+  return `<article class="card s-${st} ${open ? "open" : ""} rise" style="--slot:${color};animation-delay:${i * 60}ms" data-id="${esc(c.id)}">
     <div class="head" role="button" tabindex="0" aria-expanded="${open}">
       <div class="slot">${esc(SLOTS[c.slot] || c.slot)}${st !== "open" ? " · " + esc(st) : ""}</div>
       <h3 class="name">${esc(c.name)}</h3>
