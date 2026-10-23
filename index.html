@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Life">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F6F1E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16130F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Warm city guide. Paper background, one tomato accent, a serif that feels like a magazine.
+   Each slot has its own soft tint so a week reads at a glance. */
+:root {
+  --bg: #F6F1E8;
+  --card: #FFFDF8;
+  --ink: #1F1A14;
+  --muted: #6E655A;
+  --line: #E6DDCF;
+  --accent: #E0502F;
+  --accent-ink: #fff;
+  --social: #E0502F; --out: #7A4FD1; --food: #C98A12; --learn: #1F8A70; --trip: #2F6FD6; --stretch: #C2417F;
+  --f-display: "Fraunces", Georgia, serif;
+  --f-body: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16130F; --card: #201C17; --ink: #F3ECE1; --muted: #A79C8E; --line: #332D25;
+    --accent: #FF6B47; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] { --bg: #16130F; --card: #201C17; --ink: #F3ECE1; --muted: #A79C8E; --line: #332D25; --accent: #FF6B47; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); }
+body { margin: 0; color: var(--ink); font: 16px/1.55 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+.bar { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); padding: max(10px, env(safe-area-inset-top)) 16px 10px; }
+.bar-in { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font: 700 1.25rem/1 var(--f-display); letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.pill { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 14px; min-height: 40px; font-size: 0.9rem; font-weight: 500; }
+.pill:disabled { opacity: .55; cursor: default; }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 8px 16px calc(64px + env(safe-area-inset-bottom)); }
+.hero { padding: 28px 0 32px; }
+.kicker { font-size: 0.85rem; color: var(--muted); margin: 0 0 6px; }
+h1 { font: 700 clamp(2.1rem, 8vw, 3.2rem)/1.05 var(--f-display); letter-spacing: -0.02em; margin: 0; }
+.sub { color: var(--muted); margin: 12px 0 0; max-width: 34em; }
+.run { font-size: 0.85rem; color: var(--muted); margin: 10px 0 0; min-height: 1.2em; }
+.dots { display: flex; gap: 6px; margin-top: 18px; }
+.dots i { width: 28px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots i.on { background: var(--accent); }
+
+h2 { font: 650 1.35rem/1.2 var(--f-display); margin: 44px 0 14px; display: flex; justify-content: space-between; align-items: baseline; }
+h2 small { font: 400 0.85rem var(--f-body); color: var(--muted); }
+
+.cards { display: grid; gap: 12px; }
+.card { background: var(--card); border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 1px 0 var(--line), 0 8px 24px -18px rgba(60,40,20,.35);
+  border-left: 5px solid var(--slot, var(--accent)); }
+.card.done, .card.skipped { opacity: .62; }
+.head { display: grid; gap: 6px; cursor: pointer; }
+.slot { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--slot); }
+.name { font: 650 1.25rem/1.25 var(--f-display); margin: 0; }
+.meta { color: var(--muted); font-size: 0.92rem; }
+.more { font-size: 0.85rem; color: var(--muted); }
+.body { display: none; margin-top: 14px; gap: 12px; }
+.card.open .body { display: grid; }
+.body p { margin: 0; max-width: 60ch; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 0.92rem; margin: 0; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.do { background: color-mix(in srgb, var(--slot) 10%, var(--card)); border-radius: 12px; padding: 12px 14px; }
+.do b { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--slot); margin-bottom: 2px; }
+.go { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--bg); text-decoration: none; border-radius: 999px;
+  padding: 10px 16px; min-height: 44px; font-weight: 500; justify-self: start; }
+
+.acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.acts button { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 14px; min-height: 44px; font-size: 0.92rem; }
+.acts button.on { background: var(--slot); border-color: var(--slot); color: #fff; }
+.rate { display: flex; gap: 8px; align-items: center; margin-top: 10px; font-size: 0.9rem; color: var(--muted); flex-wrap: wrap; }
+.rate button { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 6px 12px; min-height: 40px; }
+.rate button.on { border-color: var(--ink); color: var(--ink); font-weight: 600; }
+
+.also { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.also li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.also li:last-child { border-bottom: 0; }
+.also a { font-weight: 500; }
+.also span { display: block; color: var(--muted); font-size: 0.9rem; }
+
+.weeks { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+.weeks button { scroll-snap-align: start; flex: none; border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 10px 14px; text-align: left; min-height: 44px; }
+.weeks button.on { border-color: var(--ink); }
+.weeks small { display: block; color: var(--muted); font-size: 0.8rem; }
+
+.setup { background: var(--card); border-radius: 18px; padding: 20px; display: grid; gap: 18px; }
+.setup ol { margin: 0; padding-left: 1.2em; display: grid; gap: 14px; }
+.setup li span { display: block; color: var(--muted); font-size: 0.92rem; }
+.field { display: flex; gap: 8px; margin-top: 8px; }
+.field input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; background: var(--bg); color: var(--ink); }
+.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: 12px 20px; min-height: 44px; font-weight: 600; justify-self: start; }
+.msg { font-size: 0.9rem; margin: 6px 0 0; min-height: 1.2em; color: var(--muted); }
+.msg.bad { color: var(--accent); }
+.link { color: var(--accent); font-weight: 500; }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 999px; font-size: 0.9rem; transition: .25s ease-out; pointer-events: none; z-index: 20; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.rise { animation: rise .5s ease-out both; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; } .toast { transition: none; } }
+</style>
+
+<header class="bar"><div class="bar-in">
+  <div class="brand">Life<span>.</span></div>
+  <button class="pill" id="gen" hidden>New week</button>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <p class="kicker" id="kicker">Eindhoven</p>
+    <h1 id="title">Your week.</h1>
+    <p class="sub" id="sub">Loading this week's picks…</p>
+    <div class="dots" id="dots"></div>
+    <p class="run" id="run" role="status"></p>
+  </section>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const SLOTS = { social: "Meet people", out: "Going out", food: "Food", learn: "Learn", trip: "Day trip", stretch: "Stretch" };
+const RATINGS = [["1", "Meh"], ["2", "Good"], ["3", "Loved it"]];
+const STATUSES = ["done", "later", "skipped"];
+let briefs = [], ledger = {}, current = null;
+const openCards = new Set();
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2200);
+}
+const fmtDate = d => new Date(d + "T12:00").toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+
+// ---------- GitHub backend: the private repo holds briefs and ledger.md ----------
+const GH = { repo: "jerichoNega/life", branch: "master", workflow: "life.yml" };
+let token = null;
+try { token = localStorage.getItem("life.token"); } catch (e) {}
+
+async function gh(path, { method = "GET", body, raw } = {}) {
+  const r = await fetch(`https://api.github.com/repos/${GH.repo}${path}`, {
+    method, cache: "no-store",
+    headers: { Authorization: "Bearer " + token, Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
+               "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
+    body: body && JSON.stringify(body),
+  });
+  if (r.status === 401) { forgetToken(); throw Object.assign(new Error("bad token"), { status: 401 }); }
+  if (!r.ok) throw Object.assign(new Error(r.status), { status: r.status });
+  return r.status === 204 ? null : raw ? r.text() : r.json();
+}
+const b64decode = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), c => c.charCodeAt(0)));
+const b64encode = s => { let out = ""; for (const b of new TextEncoder().encode(s)) out += String.fromCharCode(b); return btoa(out); };
+
+// ledger.md: | Added | Item | Area | Status | Rating | Note |
+const ROW = /^\|\s*(\d{4}-\d{2}-\d{2})\s*\|(.*)\|\s*$/;
+const COLS = 6;
+function ledgerRows(text) {
+  return text.split("\n").map((line, i) => {
+    const m = line.match(ROW);
+    const cells = m && [m[1], ...m[2].split("|").map(c => c.trim())];
+    return cells && cells.length >= 4 && cells.length <= COLS ? { i, cells: [...cells, ...Array(COLS - cells.length).fill("")] } : null;
+  }).filter(Boolean);
+}
+function cardOf(id) {
+  for (const b of briefs) for (const c of b.cards || []) if (c.id === id) return { added: b.date, c };
+  return null;
+}
+function ledgerFrom(text) {
+  const out = {};
+  for (const { cells: [added, name, area, status, rating, note] } of ledgerRows(text))
+    for (const b of briefs) if (b.date === added) for (const c of b.cards || []) if (c.name === name)
+      out[c.id] = { added, status, rating, note };
+  return out;
+}
+function patchLedger(text, id, patch) {
+  const { added, c } = cardOf(id);
+  const lines = text.replace(/\n$/, "").split("\n");
+  const hit = ledgerRows(text).find(r => r.cells[0] === added && r.cells[1] === c.name);
+  const cells = hit ? hit.cells : [added, c.name, c.slot, "open", "", ""];
+  if (patch.status) { cells[3] = patch.status; if (patch.status !== "done") cells[4] = ""; }
+  if ("rating" in patch) cells[4] = patch.rating;
+  const row = "| " + cells.join(" | ") + " |";
+  hit ? (lines[hit.i] = row) : lines.push(row);
+  return lines.join("\n") + "\n";
+}
+
+const backend = {
+  async briefs() {
+    const files = (await gh(`/contents/briefs?ref=${GH.branch}`)).filter(f => f.name.endsWith(".json"));
+    const all = await Promise.all(files.map(f => gh(`/contents/${f.path}?ref=${GH.branch}`, { raw: true }).then(JSON.parse).catch(() => null)));
+    return all.filter(Boolean).sort((a, z) => z.date.localeCompare(a.date));
+  },
+  async ledger() { return ledgerFrom(await gh(`/contents/ledger.md?ref=${GH.branch}`, { raw: true })); },
+  async save(id, patch) {
+    for (let attempt = 0; ; attempt++) {
+      const f = await gh(`/contents/ledger.md?ref=${GH.branch}`);
+      const text = patchLedger(b64decode(f.content), id, patch);
+      try {
+        await gh("/contents/ledger.md", { method: "PUT", body: {
+          message: `ledger: ${cardOf(id).c.name} ${patch.status || "rating " + patch.rating}`, content: b64encode(text), sha: f.sha, branch: GH.branch } });
+        return ledgerFrom(text);
+      } catch (e) { if (e.status !== 409 || attempt) throw e; }  // written in between: reread once
+    }
+  },
+};
+
+// ---------- Render ----------
+function renderCard(c, i) {
+  const r = ledger[c.id] || {}, st = r.status || "open", open = openCards.has(c.id);
+  const color = `var(--${SLOTS[c.slot] ? c.slot : "stretch"})`;
+  return `<article class="card ${st} ${open ? "open" : ""} rise" style="--slot:${color};animation-delay:${i * 60}ms" data-id="${esc(c.id)}">
+    <div class="head" role="button" tabindex="0" aria-expanded="${open}">
+      <div class="slot">${esc(SLOTS[c.slot] || c.slot)}${st !== "open" ? " · " + esc(st) : ""}</div>
+      <h3 class="name">${esc(c.name)}</h3>
+      <div class="meta">${esc(c.when)} · ${esc(c.cost)}</div>
+      <div class="more">${open ? "Less" : "More"}</div>
+    </div>
+    <div class="body">
+      <p>${esc(c.why)}</p>
+      <dl class="facts"><dt>Where</dt><dd>${esc(c.where)}</dd><dt>Getting there</dt><dd>${esc(c.travel)}</dd></dl>
+      <div class="do"><b>Do it</b>${esc(c.do)}</div>
+      ${c.link && c.link.url ? `<a class="go" href="${esc(c.link.url)}" target="_blank" rel="noopener">${esc(c.link.label || "Open")} <span aria-hidden="true">↗</span></a>` : ""}
+    </div>
+    <div class="acts">${STATUSES.map(s => `<button data-s="${s}" class="${st === s ? "on" : ""}" aria-pressed="${st === s}">${{ done: "Did it", later: "Later", skipped: "Skip" }[s]}</button>`).join("")}</div>
+    ${st === "done" ? `<div class="rate">How was it?${RATINGS.map(([v, l]) => `<button data-r="${v}" class="${r.rating === v ? "on" : ""}" aria-pressed="${r.rating === v}">${l}</button>`).join("")}</div>` : ""}
+  </article>`;
+}
+
+function render() {
+  if (!briefs.length) {
+    $("title").textContent = "Nothing yet.";
+    $("sub").textContent = "Your first week shows up here on Thursday night. Or tap New week.";
+    $("main").innerHTML = ""; return;
+  }
+  const b = briefs.find(x => x.date === current) || briefs[0];
+  current = b.date;
+  const cards = b.cards || [];
+  const done = cards.filter(c => (ledger[c.id] || {}).status === "done").length;
+  const left = cards.filter(c => !["done", "skipped"].includes((ledger[c.id] || {}).status || "open")).length;
+  $("kicker").textContent = `Eindhoven · week of ${fmtDate(b.date)}`;
+  $("title").textContent = b === briefs[0] ? (done ? `${done} done. ${left} to go.` : `${cards.length} things this week.`) : `Week of ${fmtDate(b.date)}.`;
+  $("sub").textContent = done ? "Nice. Pick the next one and just go." : "Start with the first one. Tap a card for the details.";
+  $("dots").innerHTML = cards.map(c => `<i class="${(ledger[c.id] || {}).status === "done" ? "on" : ""}"></i>`).join("");
+
+  const also = b.also || [];
+  $("main").innerHTML = `
+    <div class="cards">${cards.map(renderCard).join("")}</div>
+    ${also.length ? `<h2>Also on <small>if a card doesn't fit</small></h2>
+      <ul class="also">${also.map(a => `<li><a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.label)}</a><span>${esc(a.note)}</span></li>`).join("")}</ul>` : ""}
+    ${briefs.length > 1 ? `<h2>Past weeks</h2><div class="weeks">${briefs.map(w => {
+      const n = (w.cards || []).filter(c => (ledger[c.id] || {}).status === "done").length;
+      return `<button data-week="${esc(w.date)}" class="${w.date === current ? "on" : ""}">${esc(fmtDate(w.date))}<small>${n} of ${(w.cards || []).length} done</small></button>`;
+    }).join("")}</div>` : ""}`;
+}
+
+async function save(id, patch) {
+  const before = ledger[id];
+  ledger[id] = { ...(before || {}), ...patch, ...(patch.status && patch.status !== "done" ? { rating: "" } : {}) };
+  render();  // show it straight away, then write to GitHub
+  try {
+    ledger = await backend.save(id, patch);
+    render();
+    toast(patch.status === "done" ? "Nice one. How was it?" : patch.status === "later" ? "Saved for later" : patch.status === "skipped" ? "Skipped" : "Thanks, noted");
+  } catch (e) {
+    ledger[id] = before; render();
+    toast("Could not save. Check the connection.");
+  }
+}
+
+async function load() {
+  briefs = await backend.briefs();
+  try { current = localStorage.getItem("life.week"); } catch (_) {}
+  if (!briefs.some(b => b.date === current)) current = null;
+  ledger = await backend.ledger();
+  render();
+}
+
+// ---------- New week: start the workflow, poll until it finishes ----------
+let dispatchedAt = 0, wasRunning = false;
+async function runState() {
+  const run = (await gh(`/actions/workflows/${GH.workflow}/runs?per_page=1`)).workflow_runs[0];
+  // A dispatched run takes a few seconds to show up in the list
+  if (dispatchedAt && Date.now() - dispatchedAt < 90000 && (!run || Date.parse(run.created_at) < dispatchedAt - 5000)) return { running: true };
+  if (!run) return { running: false };
+  const done = run.status === "completed";
+  return { running: !done, failed: done && run.conclusion !== "success", started: Date.parse(run.run_started_at || run.created_at) };
+}
+async function poll() {
+  let st;
+  try { st = await runState(); } catch (e) { return (poll.t = setTimeout(poll, 30000)); }
+  $("gen").disabled = st.running;
+  $("gen").textContent = st.running ? "Finding things…" : "New week";
+  $("run").textContent = st.running ? "Looking around Eindhoven for you. Takes 5 to 15 min." : st.failed ? "Last search failed. See the Actions tab on GitHub." : "";
+  if (!st.running && wasRunning) { await load(); toast("Your new week is ready"); }
+  wasRunning = st.running;
+  poll.t = setTimeout(poll, st.running ? 10000 : 60000);
+}
+$("gen").addEventListener("click", async () => {
+  $("gen").disabled = true;
+  try { await gh(`/actions/workflows/${GH.workflow}/dispatches`, { method: "POST", body: { ref: GH.branch } }); dispatchedAt = Date.now(); }
+  catch (e) { toast("Could not start the search"); }
+  clearTimeout(poll.t); poll();
+});
+
+function toggle(head) {
+  const id = head.closest(".card").dataset.id;
+  openCards.has(id) ? openCards.delete(id) : openCards.add(id);
+  render();
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("a")) return;
+  const w = e.target.closest("[data-week]");
+  if (w) { current = w.dataset.week; try { localStorage.setItem("life.week", current); } catch (_) {} render(); scrollTo({ top: 0 }); return; }
+  const s = e.target.closest("[data-s]");
+  if (s) {
+    const id = s.closest(".card").dataset.id, cur = (ledger[id] || {}).status || "open";
+    return save(id, { status: cur === s.dataset.s ? "open" : s.dataset.s });  // tap again to undo
+  }
+  const r = e.target.closest("[data-r]");
+  if (r) return save(r.closest(".card").dataset.id, { rating: r.dataset.r });
+  const h = e.target.closest(".head");
+  if (h) toggle(h);
+});
+document.addEventListener("keydown", e => {
+  const h = e.target.closest && e.target.closest(".head");
+  if (h && e.target === h && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(h); }
+});
+
+// ---------- Connect this device: a fine-grained GitHub key, stored on the device ----------
+function forgetToken() {
+  token = null;
+  try { localStorage.removeItem("life.token"); } catch (e) {}
+  askToken("expired");
+}
+function deviceName() {
+  const ua = navigator.userAgent, app = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  const kind = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) ? "iPad" : /Android/.test(ua) ? "Android" : /Mac/.test(ua) ? "Mac" : "browser";
+  return `Life · ${kind}${app ? " app" : ""}`;
+}
+function tokenUrl() {
+  const q = new URLSearchParams({ name: deviceName(), description: "Life app: read the week, save what you did, start New week.",
+    target_name: GH.repo.split("/")[0], expires_in: "366", contents: "write", actions: "write" });
+  return "https://github.com/settings/personal-access-tokens/new?" + q;
+}
+function askToken(reason) {
+  clearTimeout(poll.t);
+  $("gen").hidden = true;
+  $("dots").innerHTML = "";
+  $("kicker").textContent = reason === "expired" ? "Reconnect" : "Setup · about 1 minute";
+  $("title").textContent = reason === "expired" ? "Your key stopped working." : "Connect this device.";
+  $("sub").textContent = reason === "expired" ? "GitHub keys expire. Make a fresh one and you are back." : "Your weeks live in your private GitHub repo. A key lets this device read them.";
+  $("main").innerHTML = `<form class="setup" id="token-form" novalidate>
+    <ol>
+      <li><b>Make a key on GitHub.</b><span>The link fills in everything except one thing: under <em>Repository access</em>, choose <em>Only select repositories</em> and pick <code>${esc(GH.repo.split("/")[1])}</code>.</span>
+        <a class="link" href="${esc(tokenUrl())}" target="_blank" rel="noopener">Open GitHub ↗</a></li>
+      <li><b>Generate and copy it.</b><span>It starts with <code>github_pat_</code>.</span></li>
+      <li><b>Paste it here.</b><span>It stays on this device.</span>
+        <div class="field"><input id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_…" aria-label="GitHub key"></div>
+        <p class="msg" id="token-msg" role="status"></p></li>
+    </ol>
+    <button type="submit" class="primary" id="token-save">Connect</button>
+  </form>`;
+  const input = $("token"), msg = $("token-msg");
+  const say = (text, ok) => { msg.textContent = text; msg.className = "msg" + (ok || !text ? "" : " bad"); };
+  $("token-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const t = input.value.trim();
+    if (!/^(github_pat_|ghp_)/.test(t)) return say("That doesn't look like a GitHub key. It should start with github_pat_.");
+    $("token-save").disabled = true; say("Checking with GitHub…", true);
+    // Test the key before keeping it, so a typo never gets saved
+    try {
+      const r = await fetch(`https://api.github.com/repos/${GH.repo}`, { cache: "no-store",
+        headers: { Authorization: "Bearer " + t, Accept: "application/vnd.github+json" } });
+      if (r.status === 401) throw new Error("GitHub doesn't accept that key. Copy it again, the whole thing.");
+      if (r.status === 404 || r.status === 403) throw new Error("The key works but can't see the life repo. Edit it on GitHub and add that repository.");
+      if (!r.ok) throw new Error("GitHub didn't answer. Try again in a moment.");
+    } catch (err) {
+      $("token-save").disabled = false;
+      return say(err instanceof TypeError ? "No connection. Check your internet and try again." : err.message);
+    }
+    token = t;
+    try { localStorage.setItem("life.token", token); } catch (_) {}
+    toast("Connected");
+    start();
+  });
+}
+
+function start() {
+  if (!token) return askToken();
+  $("gen").hidden = false;
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  load().catch(e => { if (e.status !== 401) $("sub").textContent = "Could not load your week. Check the connection."; });
+  poll();
+}
+start();
+</script>
+</html>
