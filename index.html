@@ -23,7 +23,8 @@
   --bg: #0C0B0A; --surface: #171513; --surface-2: #221F1C; --ink: #F5F1EA; --muted: #A39B90; --faint: #6B645B;
   --line: rgba(255,255,255,.08); --glass: rgba(20,18,16,.55);
   --accent: #FF5A36;
-  --social: #FF5A36; --out: #A274FF; --food: #FFB224; --learn: #2BD4A4; --trip: #3D9BFF; --stretch: #FF4FA3;
+  --social: #FF5A36; --out: #A274FF; --food: #FFB224; --learn: #2BD4A4; --trip: #3D9BFF; --stretch: #E040FB;
+  --read: #D9B88F; --hangout: #FFD23F; --habit: #B4F03C; --shop: #FF8FAB;
   --good: #2BD4A4;
   --r-lg: 26px; --r-md: 18px; --r-sm: 12px;
   --f-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
@@ -131,6 +132,34 @@ img.in { opacity: 1 !important; }
 .card.s-skipped { opacity: .5; }
 .card.dim { opacity: .28; transform: scale(.97); }
 
+/* ---------- Extras ---------- */
+.extras { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (min-width: 900px) { .extras { grid-template-columns: repeat(4, 1fr); } }
+.ex { position: relative; aspect-ratio: 1 / 1.12; border-radius: var(--r-md); overflow: hidden; isolation: isolate; text-align: left; color: #fff;
+  background: radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, var(--slot) 75%, #000), color-mix(in srgb, var(--slot) 22%, #0b0a09) 80%); transition: transform .3s var(--ease); }
+.ex:hover { transform: translateY(-3px); }
+.ex:active { transform: scale(.97); }
+.ex img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: opacity .5s; }
+.ex .glyph { position: absolute; right: -8%; top: 14%; width: 62%; color: rgba(255,255,255,.18); z-index: -2; stroke-width: 1.2; }
+.ex::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.25), transparent 35%, rgba(0,0,0,.85)); }
+.ex .top { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; }
+.ex .chip { height: 26px; font-size: .7rem; }
+.exb { position: absolute; left: 12px; right: 12px; bottom: 12px; display: grid; gap: 2px; }
+.exb b { font: 750 1.12rem/1.1 var(--f-display); letter-spacing: -.01em; text-wrap: balance; }
+.exb span { font-size: .78rem; color: rgba(255,255,255,.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* a book shows its whole cover on a blurred copy of itself */
+.ex-read .exbg { position: absolute; inset: -20px; z-index: -3; background: center / cover; filter: blur(22px) brightness(.6); }
+.ex-read img { object-fit: contain; padding: 40px 30% 64px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
+/* a habit has no photo: the words are the picture */
+.ex-habit { color: #10140a; background: var(--habit); }
+.ex-habit::after { display: none; }
+.ex-habit .glyph { color: rgba(16,20,10,.12); }
+.ex-habit .chip { background: rgba(16,20,10,.12); color: #10140a; }
+.ex-habit .chip i { background: #10140a; box-shadow: none; }
+.ex-habit .exb b { font-size: 1.35rem; }
+.ex-habit .exb span { color: rgba(16,20,10,.65); }
+.ex.s-done:not(.ex-habit) img { filter: grayscale(.8) brightness(.7); }
+
 /* ---------- Bento ---------- */
 .bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 @media (min-width: 900px) { .bento { grid-template-columns: repeat(4, 1fr); } }
@@ -159,6 +188,8 @@ img.in { opacity: 1 !important; }
   box-shadow: 0 6px 16px -4px rgba(0,0,0,.6), 0 0 0 3px rgba(255,255,255,.9); }
 .pin b { transform: rotate(45deg); color: #fff; font: 800 .9rem var(--f-display); }
 .pin.done { filter: grayscale(.7); }
+.pin-x b { display: grid; color: #111; }
+.pin-x svg { width: 16px; height: 16px; stroke-width: 2.2; }
 .pin-also { width: 12px; height: 12px; border-radius: 50%; background: var(--faint); box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
 .pin-you { width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(61,155,255,.5), 0 0 0 10px rgba(61,155,255,.18); }
 .leaflet-tooltip { background: var(--surface); color: var(--ink); border: 0; border-radius: 10px; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); font-weight: 600; font-size: .8rem; }
@@ -206,6 +237,10 @@ img.in { opacity: 1 !important; }
 .gf svg { grid-row: span 2; color: var(--slot); margin-top: 2px; }
 .gf b { font-size: .92rem; font-weight: 600; line-height: 1.3; }
 .gf span { font-size: .8rem; color: var(--muted); line-height: 1.3; }
+.by { margin: 4px 0 0; color: var(--muted); font-size: 1rem; }
+.tool:disabled { opacity: .4; cursor: default; }
+.sheet.read .sh-img img { object-fit: contain; padding: 22px 0 40px; filter: drop-shadow(0 14px 24px rgba(0,0,0,.55)); }
+.sheet.read .sh-img .exbg { position: absolute; inset: -30px; z-index: -3; background: center / cover; filter: blur(28px) brightness(.55); }
 .why { margin: 0; font-size: 1.02rem; line-height: 1.6; }
 .doit { border-radius: var(--r-md); padding: 14px 16px; background: color-mix(in srgb, var(--slot) 16%, var(--surface)); display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
 .doit svg { color: var(--slot); margin-top: 2px; }
@@ -340,6 +375,10 @@ img.in { opacity: 1 !important; }
   <symbol id="i-learn" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L19 9l-4.1 2.6L16 17l-4-3-4 3 1.1-5.4L5 9l5.1-1.4z"/></symbol>
   <symbol id="i-trip" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2 0 1.5-4M15 21h2l-1.5-4"/><circle cx="9" cy="14" r=".6"/><circle cx="15" cy="14" r=".6"/></symbol>
   <symbol id="i-stretch" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-read" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></symbol>
+  <symbol id="i-hangout" viewBox="0 0 24 24"><path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 9.5h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 2 0 3M12 2.5c-.6 1 .6 2 0 3"/></symbol>
+  <symbol id="i-habit" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
+  <symbol id="i-shop" viewBox="0 0 24 24"><path d="M5 7h14l-1.2 13H6.2z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
   <symbol id="i-euro" viewBox="0 0 24 24"><path d="M18 6.5A7 7 0 1 0 18 17.5M4 10h10M4 14h10"/></symbol>
@@ -374,7 +413,11 @@ img.in { opacity: 1 !important; }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const icon = (name, cls = "i") => `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
-const SLOTS = { social: "Meet people", out: "Going out", food: "Food", learn: "Learn", trip: "Day trip", stretch: "Stretch" };
+const SLOTS = { social: "Meet people", out: "Going out", food: "Food", learn: "Learn", trip: "Day trip", stretch: "Stretch",
+  read: "Book", hangout: "Hangout", habit: "Habit", shop: "Shop" };
+// Plans are dated things to go to; extras are the weekly book, spot, habit and shop
+const EXTRAS = new Set(["read", "hangout", "habit", "shop"]);
+const isExtra = c => EXTRAS.has(c.slot);
 const slotOf = c => SLOTS[c.slot] ? c.slot : "stretch";
 const MODES = { walk: "Walk", bike: "Bike", train: "Train" };
 const FACES = [["1", "😐", "Meh"], ["2", "🙂", "Good"], ["3", "🤩", "Loved it"]];
@@ -555,6 +598,16 @@ function cardHTML(c, i) {
     </div></button>`;
 }
 
+function extraHTML(c, i) {
+  const st = stOf(c.id), s = slotOf(c);
+  const sub = s === "read" ? `by ${c.author || ""}` : c.place && c.place !== c.name ? c.place : c.when;
+  return `<button class="ex ex-${s} s-${st} rise" style="--slot:var(--${s});animation-delay:${i * 60}ms" data-open="${esc(c.id)}" aria-label="${esc(SLOTS[s])}: ${esc(c.name)}">
+    ${s === "read" && c.image ? `<span class="exbg" style="background-image:url('${esc(c.image).replace(/'/g, "%27")}')"></span>` : ""}
+    ${icon(s, "i glyph")}${img(c.image, c.name)}
+    <span class="top"><span class="chip"><i></i>${esc(SLOTS[s])}</span>${st === "done" ? `<span class="badge done">${icon("check")}</span>` : ""}</span>
+    <span class="exb"><b>${esc(c.name)}</b><span>${esc(sub)}</span></span></button>`;
+}
+
 function upNext(b) {
   const c = (b.cards || []).filter(c => ["open", "later"].includes(stOf(c.id)) && parseStart(c.start) && !isPast(c))
     .sort((a, z) => parseStart(a.start) - parseStart(z.start))[0];
@@ -596,11 +649,12 @@ function itinerary(b) {
 
 function bento(b) {
   const cards = b.cards || [];
-  const known = cards.filter(c => typeof c.price_eur === "number");
-  const spent = known.reduce((a, c) => a + c.price_eur, 0), unknown = cards.length - known.length;
+  const known = cards.filter(c => typeof c.price_eur === "number" && c.slot !== "shop");
+  const spent = known.reduce((a, c) => a + c.price_eur, 0), unknown = cards.filter(c => c.price_eur == null && c.slot !== "shop").length;
   const bars = known.filter(c => c.price_eur > 0).map(c => `<i style="--slot:var(--${slotOf(c)});width:${Math.min(100, c.price_eur / Math.max(BUDGET, spent) * 100)}%" title="${esc(c.name)}"></i>`).join("");
   const mins = cards.reduce((a, c) => a + (c.minutes || 0), 0);
   const modes = Object.keys(MODES).map(m => [m, cards.filter(c => c.mode === m).length]).filter(([, n]) => n);
+  const plansOnly = cards.filter(c => !isExtra(c));
   // all-time: what got done, by slot, and done per week for the last 8 briefs
   const allDone = briefs.flatMap(w => (w.cards || []).filter(c => stOf(c.id) === "done"));
   const bySlot = Object.keys(SLOTS).map(s => [s, allDone.filter(c => slotOf(c) === s).length]);
@@ -615,7 +669,7 @@ function bento(b) {
       <div class="big">${mins} min<small style="display:block;margin-top:4px">travel, all plans</small></div>
       <div class="modes">${modes.map(([m, n]) => `<span class="mode">${icon(m)}${n}× ${MODES[m].toLowerCase()}</span>`).join("")}</div></div>
     <div class="tile"><div class="lbl">${icon("grid")}${allDone.length ? "Your mix" : "This week's mix"}</div>
-      <div class="big">${allDone.length || cards.length}<small style="display:block;margin-top:4px">${allDone.length ? "plans done so far" : "kinds of plans"}</small></div>
+      <div class="big">${allDone.length || cards.length}<small style="display:block;margin-top:4px">${allDone.length ? "picks done so far" : "picks this week"}</small></div>
       <div class="mix">${(allDone.length ? bySlot.filter(([, n]) => n) : Object.keys(SLOTS).map(s => [s, cards.filter(c => slotOf(c) === s).length]).filter(([, n]) => n))
         .map(([s, n]) => `<span class="on" style="--slot:var(--${s})"><i></i>${SLOTS[s]}${n > 1 ? " ×" + n : ""}</span>`).join("")}</div></div>
     <div class="tile"><div class="lbl">${icon("spark")}Weeks</div>
@@ -644,18 +698,20 @@ function render() {
     $("main").innerHTML = ""; return;
   }
   const b = brief(); current = b.date;
-  const cards = b.cards || [], latest = b === briefs[0];
+  const cards = b.cards || [], latest = b === briefs[0], plans = cards.filter(c => !isExtra(c)), extras = cards.filter(isExtra);
   const done = cards.filter(c => stOf(c.id) === "done").length;
   $("kicker").textContent = `Eindhoven · week of ${fmtDate(b.date)}`;
-  $("title").innerHTML = !latest ? `Week of <em>${esc(fmtDate(b.date))}</em>.` : done === cards.length ? `All done. <em>Legend.</em>` : done ? `${done} down, <em>${cards.length - done} to go.</em>` : `${cards.length} plans. <em>Go live a little.</em>`;
+  $("title").innerHTML = !latest ? `Week of <em>${esc(fmtDate(b.date))}</em>.` : done === cards.length ? `All done. <em>Legend.</em>` : done ? `${done} down, <em>${cards.length - done} to go.</em>` : `${plans.length} plans. <em>Go live a little.</em>`;
   $("sub").textContent = latest ? (done ? "Keep it going. Tap a plan for the details." : "Tap a plan to see it, book it, or bring a friend.") : "A past week. Tap a plan to update it.";
   $("ring").hidden = false; $("ring").innerHTML = ring(cards);
   $("next").innerHTML = latest ? upNext(b) : "";
 
   $("main").innerHTML = `
     ${latest ? dayStrip(b) : ""}
-    <div class="sec" style="margin-top:${latest ? 8 : 0}px"><h2>This week</h2>${selDay ? `<button data-day="${selDay}">Show all</button>` : `<span>${cards.length} picks for you</span>`}</div>
-    <div class="deck" id="deck">${cards.map(cardHTML).join("")}</div>
+    <div class="sec" style="margin-top:${latest ? 8 : 0}px"><h2>This week</h2>${selDay ? `<button data-day="${selDay}">Show all</button>` : `<span>${plans.length} plans for you</span>`}</div>
+    <div class="deck" id="deck">${plans.map(cardHTML).join("")}</div>
+    ${extras.length ? `<div class="sec"><h2>Your extras</h2><span>a book, a spot, a habit, a shop</span></div>
+    <div class="extras">${extras.map(extraHTML).join("")}</div>` : ""}
     ${itinerary(b)}
     <div class="sec"><h2>At a glance</h2></div>
     ${bento(b)}
@@ -688,10 +744,12 @@ function drawMap(b) {
       .bindTooltip(a.label, { direction: "top", offset: [0, -8] }).on("click", () => window.open(a.url, "_blank", "noopener"));
   });
   const pins = [];
-  (b.cards || []).forEach((c, i) => {
+  let n = 0;
+  (b.cards || []).forEach(c => {
+    const label = isExtra(c) ? icon(slotOf(c)) : ++n;
     if (c.lat == null) return;
     pts.push([c.lat, c.lng]);
-    const m = L.marker([c.lat, c.lng], { icon: L.divIcon({ className: "", html: `<div class="pin ${stOf(c.id) === "done" ? "done" : ""}" style="--slot:var(--${slotOf(c)})"><b>${i + 1}</b></div>`, iconSize: [34, 34], iconAnchor: [17, 34] }), riseOnHover: true })
+    const m = L.marker([c.lat, c.lng], { icon: L.divIcon({ className: "", html: `<div class="pin ${stOf(c.id) === "done" ? "done" : ""} ${isExtra(c) ? "pin-x" : ""}" style="--slot:var(--${slotOf(c)})"><b>${label}</b></div>`, iconSize: [34, 34], iconAnchor: [17, 34] }), riseOnHover: true })
       .addTo(map).bindTooltip(c.place || c.name, { direction: "top", offset: [0, -36] }).on("click", () => openSheet(c.id));
     pins.push([m, L.latLng(c.lat, c.lng)]);
   });
@@ -731,16 +789,17 @@ function fillSheet(id) {
   const w = d && weather[dayKey(d)];
   const sh = $("sheet");
   sh.style.setProperty("--slot", `var(--${s})`);
+  sh.classList.toggle("read", s === "read");
   sh.innerHTML = `
-    <div class="sh-img">${icon(s, "i glyph")}${img(c.image, c.name)}<span class="grab" aria-hidden="true"></span>
+    <div class="sh-img">${s === "read" && c.image ? `<span class="exbg" style="background-image:url('${esc(c.image).replace(/'/g, "%27")}')"></span>` : ""}${icon(s, "i glyph")}${img(c.image, c.name)}<span class="grab" aria-hidden="true"></span>
       <span class="chip"><i></i>${esc(SLOTS[s])}</span><button class="x" data-close aria-label="Close">${icon("x")}</button></div>
     <div class="sh-body">
-      <h2 id="sh-title">${esc(c.name)}</h2>
+      <div><h2 id="sh-title">${esc(c.name)}</h2>${c.author ? `<p class="by">by ${esc(c.author)}</p>` : ""}</div>
       <div class="grid-facts">
         <div class="gf">${icon("clock")}<b>${d ? esc(fmt(d, { weekday: "long", day: "numeric", month: "short" })) : "When it suits"}</b><span>${d ? esc(fmtTime(d)) + (c.end ? "–" + esc(fmtTime(parseStart(c.end))) : "") : esc(c.when)}</span></div>
-        <div class="gf">${icon("pin")}<b>${esc(c.place || "Where")}</b><span>${esc(c.where)}</span></div>
+        ${c.where ? `<div class="gf">${icon("pin")}<b>${esc(c.place || "Where")}</b><span>${esc(c.where)}</span></div>` : ""}
         <div class="gf">${icon("euro")}<b>${esc(euro(c.price_eur))}</b><span>${esc(c.cost) === esc(euro(c.price_eur)) ? (c.price_eur ? "per person" : "") : esc(c.cost)}</span></div>
-        <div class="gf">${icon(c.mode in MODES ? c.mode : "route")}<b>${c.minutes ? c.minutes + " min" : "Getting there"}${c.mode ? " · " + esc(MODES[c.mode] || c.mode) : ""}</b><span>${esc(c.travel)}</span></div>
+        ${c.travel ? `<div class="gf">${icon(c.mode in MODES ? c.mode : "route")}<b>${c.minutes ? c.minutes + " min" : "Getting there"}${c.mode ? " · " + esc(MODES[c.mode] || c.mode) : ""}</b><span>${esc(c.travel)}</span></div>` : ""}
         ${w ? `<div class="gf" style="grid-column:1/-1">${icon(WX(w.code)[0])}<b>${w.max}° · ${esc(WX(w.code)[1])}</b><span>${w.rain}% chance of rain that day</span></div>` : ""}
       </div>
       ${rainy(c) ? `<div class="tip">${icon("umbrella")}Rain is likely that day (${rainy(c).rain}%). Bring a jacket, or go a bit earlier.</div>` : ""}
@@ -748,11 +807,11 @@ function fillSheet(id) {
       <div class="doit">${icon("check")}<div><b>Do it</b>${esc(c.do)}</div></div>
       ${c.link && c.link.url ? `<a class="cta" href="${esc(c.link.url)}" target="_blank" rel="noopener">Open and book ${icon("arrow")}</a>` : ""}
       <div class="tools">
-        <a class="tool" href="${esc(directions(c))}" target="_blank" rel="noopener">${icon("route")}Directions</a>
+        ${c.where ? `<a class="tool" href="${esc(directions(c))}" target="_blank" rel="noopener">${icon("route")}Directions</a>` : `<button class="tool" disabled>${icon("route")}Directions</button>`}
         <button class="tool" data-ics="${esc(id)}" ${d ? "" : "disabled"}>${icon("cal")}Calendar</button>
         <button class="tool" data-share="${esc(id)}">${icon("share")}Invite</button>
       </div>
-      <div class="status"><span class="lbl">Did you go?</span>
+      <div class="status"><span class="lbl">${s === "habit" ? "Did you do it?" : s === "read" ? "Did you read it?" : "Did you go?"}</span>
         <div class="seg" role="group" aria-label="Status">
           ${[["done", "check", "Did it"], ["later", "later", "Later"], ["skipped", "skip", "Skip"]].map(([k, ic, l]) =>
             `<button data-s="${k}" class="${st === k ? "on" : ""}" aria-pressed="${st === k}">${icon(ic)}${l}</button>`).join("")}
