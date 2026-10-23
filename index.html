@@ -109,7 +109,8 @@ h1 em { font-style: normal; color: var(--accent); }
 .card:hover { transform: translateY(-4px); box-shadow: 0 28px 50px -24px rgba(0,0,0,.7); }
 .card:active { transform: scale(.98); }
 .card .glyph { position: absolute; right: -10%; top: 12%; width: 70%; height: auto; color: rgba(255,255,255,.14); z-index: -2; stroke-width: 1.2; }
-.card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; transition: transform .8s var(--ease), filter .3s; }
+.card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: transform .8s var(--ease), filter .3s, opacity .5s; }
+img.in { opacity: 1 !important; }
 .card:hover img { transform: scale(1.04); }
 .card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 28%, rgba(0,0,0,.15) 50%, rgba(0,0,0,.88) 100%); }
 .card .top { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; gap: 8px; }
@@ -192,7 +193,7 @@ h1 em { font-style: normal; color: var(--accent); }
   .sheet.show { transform: translate(-50%, 50%); opacity: 1; } }
 .sh-img { position: relative; aspect-ratio: 16 / 10; overflow: hidden; isolation: isolate;
   background: radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--slot) 70%, #000), color-mix(in srgb, var(--slot) 20%, #0b0a09) 75%); }
-.sh-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+.sh-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: opacity .5s; }
 .sh-img .glyph { position: absolute; right: 6%; top: 8%; width: 46%; color: rgba(255,255,255,.16); z-index: -2; stroke-width: 1.2; }
 .sh-img::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.3), transparent 35%, transparent 60%, var(--bg)); }
 .grab { position: absolute; top: 8px; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: rgba(255,255,255,.6); }
@@ -239,6 +240,58 @@ h1 em { font-style: normal; color: var(--accent); }
 .msg.bad { color: var(--accent); }
 .link { color: var(--accent); font-weight: 600; display: inline-block; margin-top: 6px; }
 
+/* ---------- Status pill in the bar ---------- */
+.bar-r { display: flex; align-items: center; gap: 8px; }
+.warn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border-radius: 999px; font-size: .76rem; font-weight: 600;
+  background: color-mix(in srgb, var(--food) 16%, transparent); color: var(--food); text-decoration: none; }
+.warn i { width: 7px; height: 7px; border-radius: 50%; background: var(--food); }
+
+/* ---------- Up next ---------- */
+.next-slot { grid-column: 1 / -1; }
+.next-slot:empty { display: none; }
+.next { width: 100%; max-width: 560px; display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; text-align: left;
+  background: var(--surface); border-radius: 22px; padding: 8px 14px 8px 8px; transition: transform .2s var(--ease); }
+.next:active { transform: scale(.98); }
+.nthumb { width: 64px; height: 64px; border-radius: 16px; overflow: hidden; position: relative; display: grid; place-content: center; color: rgba(255,255,255,.5);
+  background: radial-gradient(circle at 30% 20%, var(--slot), color-mix(in srgb, var(--slot) 30%, #000)); }
+.nthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s; }
+.ntext { display: grid; gap: 1px; min-width: 0; }
+.ntext > b { font: 700 1.05rem/1.2 var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ntext > span:last-child { font-size: .82rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nl { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--slot); }
+.nl b { color: var(--ink); }
+.ngo { width: 36px; height: 36px; border-radius: 50%; background: var(--slot); color: #fff; display: grid; place-content: center; }
+
+/* ---------- Relative time, rain ---------- */
+.when b { color: #fff; }
+.fact.wet { background: rgba(61,155,255,.35); }
+.card.past:not(.s-done) img { filter: saturate(.4) brightness(.75); }
+.tip { display: flex; gap: 10px; align-items: center; font-size: .9rem; padding: 10px 14px; border-radius: var(--r-sm); background: rgba(61,155,255,.14); color: var(--ink); }
+.tip svg { color: var(--trip); }
+
+/* ---------- Itinerary ---------- */
+.itin { display: grid; gap: 22px; }
+@media (min-width: 900px) { .itin { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); align-items: start; } }
+.iday h3 { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; font: 700 1.05rem var(--f-display); }
+.iday h3 small { font: 500 .82rem var(--f-body); color: var(--muted); display: inline-flex; align-items: center; gap: 4px; margin-left: auto; }
+.iday h3 small svg { width: 16px; height: 16px; }
+.irail { display: grid; gap: 0; position: relative; }
+.irail::before { content: ""; position: absolute; left: 61px; top: 16px; bottom: 16px; width: 2px; background: var(--line); border-radius: 1px; }
+.it { display: grid; grid-template-columns: 48px 28px 1fr; gap: 0 0; align-items: start; text-align: left; padding: 8px 0; }
+.it .tm { font: 700 .92rem/1.2 var(--f-display); padding-top: 2px; }
+.it .tm small { display: block; font: 500 .74rem var(--f-body); color: var(--muted); }
+.it .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--slot); margin: 4px 0 0 7px; box-shadow: 0 0 0 4px var(--bg); position: relative; z-index: 1; }
+.it.s-done .dot { background: var(--good); }
+.it .itx { background: var(--surface); border-radius: var(--r-sm); padding: 10px 12px; display: grid; gap: 2px; transition: transform .2s var(--ease); }
+.it:active .itx { transform: scale(.98); }
+.it .itx b { font-weight: 600; line-height: 1.25; }
+.it .itx span { font-size: .82rem; color: var(--muted); }
+.it .clash { color: var(--food); font-weight: 600; display: inline-flex; gap: 5px; align-items: center; }
+.it .clash svg { width: 14px; height: 14px; }
+
+/* ---------- Confetti ---------- */
+.conf { position: fixed; z-index: 70; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; }
+
 /* ---------- Toast, motion ---------- */
 .toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 60; transform: translate(-50%, 24px); opacity: 0;
   background: var(--ink); color: var(--bg); padding: 12px 18px; border-radius: 999px; font-size: .9rem; font-weight: 600; transition: .3s var(--ease); pointer-events: none;
@@ -253,7 +306,10 @@ h1 em { font-style: normal; color: var(--accent); }
 
 <header class="bar"><div class="bar-in">
   <div class="brand">Life <i></i></div>
-  <button class="gen" id="gen" hidden><svg class="i"><use href="#i-refresh"/></svg><span>New week</span></button>
+  <div class="bar-r">
+    <a class="warn" id="warn" href="https://github.com/jerichoNega/life/actions" target="_blank" rel="noopener" title="The last automatic update failed. Tap to see why." hidden><i></i>Update failed</a>
+    <button class="gen" id="gen" hidden><svg class="i"><use href="#i-refresh"/></svg><span>New week</span></button>
+  </div>
 </div></header>
 
 <div class="wrap">
@@ -265,6 +321,7 @@ h1 em { font-style: normal; color: var(--accent); }
       <p class="run" id="run" role="status"></p>
     </div>
     <div class="ring" id="ring" hidden></div>
+    <div id="next" class="next-slot"></div>
   </section>
   <main id="main">
     <div class="days"><div class="day skel"></div><div class="day skel"></div><div class="day skel"></div><div class="day skel"></div><div class="day skel"></div><div class="day skel"></div><div class="day skel"></div></div>
@@ -307,6 +364,8 @@ h1 em { font-style: normal; color: var(--accent); }
   <symbol id="i-fog" viewBox="0 0 24 24"><path d="M4 9h16M3 13h18M5 17h14"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h1.5"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9"/><path d="M15 6h5v5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/></symbol>
+  <symbol id="i-umbrella" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 18 0zM12 12v6a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>
 </svg>
 
@@ -336,6 +395,25 @@ const fmt = (d, o) => d.toLocaleDateString("en-GB", o);
 const fmtTime = d => d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
 const whenShort = c => { const d = parseStart(c.start); return d ? `${fmt(d, { weekday: "short" })} ${d.getDate()} · ${fmtTime(d)}` : ""; };
 const fmtDate = d => fmt(new Date(d + "T12:00"), { day: "numeric", month: "long" });
+const endOf = c => { const d = parseStart(c.start); return d && (c.end ? parseStart(c.end) : new Date(d.getTime() + 2 * 3600e3)); };
+const isPast = c => { const e = endOf(c); return !!e && e < new Date(); };
+function rel(c) {
+  const d = parseStart(c.start); if (!d) return "";
+  const n = new Date();
+  if (isPast(c)) return "Did you go?";
+  if (d <= n) return "Happening now";
+  const days = Math.round((new Date(dayKey(d) + "T12:00") - new Date(dayKey(n) + "T12:00")) / 864e5);
+  return days === 0 ? (d.getHours() >= 17 ? "Tonight" : "Today") : days === 1 ? "Tomorrow" : `In ${days} days`;
+}
+function countdown(d) {
+  const ms = d - new Date(), h = Math.round(ms / 36e5);
+  return ms <= 0 ? "now" : ms < 36e5 ? `in ${Math.max(1, Math.round(ms / 6e4))} min` : h < 48 ? `in ${h} h` : `in ${Math.round(h / 24)} days`;
+}
+// Outdoor-ish plans (a trip, or getting there by bike or on foot) on a day with a real rain risk
+function rainy(c) {
+  const d = parseStart(c.start), w = d && weather[dayKey(d)];
+  return w && w.rain >= 60 && (c.slot === "trip" || c.mode === "bike" || c.mode === "walk") ? w : null;
+}
 const euro = n => n === 0 ? "Free" : n == null ? "€ ?" : "€" + (Number.isInteger(n) ? n : n.toFixed(2));
 
 // ---------- Weather: Open-Meteo, no key, Eindhoven ----------
@@ -424,7 +502,9 @@ const backend = {
 // ---------- Render ----------
 const stOf = id => (ledger[id] || {}).status || "open";
 const brief = () => briefs.find(x => x.date === current) || briefs[0];
-const img = (src, alt = "") => src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : "";
+const SEEN_IMG = new Set();
+const img = (src, alt = "") => src ? `<img src="${esc(src)}" alt="${esc(alt)}" class="${SEEN_IMG.has(src) ? "in" : ""}" loading="lazy" referrerpolicy="no-referrer"
+  onload="SEEN_IMG.add(this.getAttribute('src'));this.classList.add('in')" onerror="this.remove()">` : "";
 
 function ring(cards) {
   const n = cards.length || 1, r = 40, C = 2 * Math.PI * r, gap = 4, seg = C / n - gap;
@@ -458,20 +538,60 @@ function dayStrip(b) {
 
 function cardHTML(c, i) {
   const st = stOf(c.id), s = slotOf(c), d = parseStart(c.start);
-  const dim = selDay && !(d && dayKey(d) === selDay);
-  return `<button class="card s-${st} ${dim ? "dim" : ""} rise" style="--slot:var(--${s});animation-delay:${i * 70}ms" data-open="${esc(c.id)}" aria-label="${esc(c.name)}, ${esc(SLOTS[s])}">
+  const dim = selDay && !(d && dayKey(d) === selDay), r = st === "done" ? "" : rel(c), wet = rainy(c);
+  return `<button class="card s-${st} ${dim ? "dim" : ""} ${isPast(c) ? "past" : ""} rise" style="--slot:var(--${s});animation-delay:${i * 70}ms" data-open="${esc(c.id)}" aria-label="${esc(c.name)}, ${esc(SLOTS[s])}">
     ${icon(s, "i glyph")}${img(c.image, c.name)}
     <div class="top"><span class="chip"><i></i>${esc(SLOTS[s])}</span>
       ${st === "done" ? `<span class="badge done">${icon("check")}</span>` : st === "later" ? `<span class="badge">${icon("later")}</span>` : st === "skipped" ? `<span class="badge">${icon("skip")}</span>` : ""}</div>
     <div class="bottom">
-      <div class="when">${esc(whenShort(c) || c.when)}</div>
+      <div class="when">${r ? `<b>${esc(r)}</b> · ` : ""}${esc(whenShort(c) || c.when)}</div>
       <h3>${esc(c.name)}</h3>
       <div class="facts-row">
         <span class="fact">${icon("euro")}${esc(euro(c.price_eur))}</span>
         ${c.minutes ? `<span class="fact">${icon(c.mode in MODES ? c.mode : "pin")}${c.minutes} min</span>` : ""}
-        ${c.place ? `<span class="fact">${icon("pin")}${esc(c.place)}</span>` : ""}
+        ${wet ? `<span class="fact wet">${icon("rain")}${wet.rain}%</span>` : ""}
+        ${c.place && !wet ? `<span class="fact">${icon("pin")}${esc(c.place)}</span>` : ""}
       </div>
     </div></button>`;
+}
+
+function upNext(b) {
+  const c = (b.cards || []).filter(c => ["open", "later"].includes(stOf(c.id)) && parseStart(c.start) && !isPast(c))
+    .sort((a, z) => parseStart(a.start) - parseStart(z.start))[0];
+  if (!c) return "";
+  const d = parseStart(c.start);
+  return `<button class="next rise" data-open="${esc(c.id)}" style="--slot:var(--${slotOf(c)})">
+    <span class="nthumb">${icon(slotOf(c))}${img(c.image, c.name)}</span>
+    <span class="ntext"><span class="nl">Up next · <b data-cd="${esc(c.start)}">${esc(countdown(d))}</b></span><b>${esc(c.name)}</b>
+      <span>${esc(rel(c))} ${esc(fmtTime(d))}${c.place ? " · " + esc(c.place) : ""}</span></span>
+    <span class="ngo">${icon("arrow")}</span></button>`;
+}
+
+function itinerary(b) {
+  const cards = (b.cards || []).filter(c => parseStart(c.start)).sort((a, z) => parseStart(a.start) - parseStart(z.start));
+  const days = [...new Set(cards.map(c => dayKey(parseStart(c.start))))].filter(k => !selDay || k === selDay);
+  if (!days.length) return "";
+  // two fixed-time plans on the same day whose times overlap. All-day things (4 h or more, like a festival)
+  // are flexible and plans without an end time count as 1 h, so a lunch inside a festival day is not a clash.
+  const span = c => { const s = parseStart(c.start); return [s, c.end ? parseStart(c.end) : new Date(s.getTime() + 36e5)]; };
+  const fixed = c => { const [s, e] = span(c); return e - s < 4 * 36e5; };
+  const clash = {};
+  for (const a of cards) for (const z of cards) {
+    if (a === z || !fixed(a) || !fixed(z) || dayKey(parseStart(a.start)) !== dayKey(parseStart(z.start))) continue;
+    const [as, ae] = span(a), [zs, ze] = span(z);
+    if (as < ze && zs < ae) (clash[a.id] ||= []).push(z.place || z.name);
+  }
+  return `<div class="sec"><h2>Day by day</h2><span>${Object.keys(clash).length ? "watch the overlaps" : "your plan"}</span></div><div class="itin">${days.map(k => {
+    const d = new Date(k + "T12:00"), w = weather[k];
+    return `<div class="iday"><h3>${esc(fmt(d, { weekday: "long", day: "numeric", month: "short" }))}${w ? `<small>${icon(WX(w.code)[0])}${w.max}° · ${w.rain}% rain</small>` : ""}</h3>
+      <div class="irail">${cards.filter(c => dayKey(parseStart(c.start)) === k).map(c => {
+        const s = parseStart(c.start), e = c.end && parseStart(c.end);
+        return `<button class="it s-${stOf(c.id)}" data-open="${esc(c.id)}" style="--slot:var(--${slotOf(c)})">
+          <span class="tm">${esc(fmtTime(s))}${e ? `<small>${esc(fmtTime(e))}</small>` : ""}</span><span class="dot"></span>
+          <span class="itx"><b>${esc(c.name)}</b><span>${esc(c.place || c.where)} · ${esc(euro(c.price_eur))}</span>
+          ${clash[c.id] ? `<span class="clash">${icon("alert")}Overlaps with ${esc(clash[c.id].join(", "))}</span>` : ""}</span></button>`;
+      }).join("")}</div></div>`;
+  }).join("")}</div>`;
 }
 
 function bento(b) {
@@ -530,11 +650,13 @@ function render() {
   $("title").innerHTML = !latest ? `Week of <em>${esc(fmtDate(b.date))}</em>.` : done === cards.length ? `All done. <em>Legend.</em>` : done ? `${done} down, <em>${cards.length - done} to go.</em>` : `${cards.length} plans. <em>Go live a little.</em>`;
   $("sub").textContent = latest ? (done ? "Keep it going. Tap a plan for the details." : "Tap a plan to see it, book it, or bring a friend.") : "A past week. Tap a plan to update it.";
   $("ring").hidden = false; $("ring").innerHTML = ring(cards);
+  $("next").innerHTML = latest ? upNext(b) : "";
 
   $("main").innerHTML = `
     ${latest ? dayStrip(b) : ""}
     <div class="sec" style="margin-top:${latest ? 8 : 0}px"><h2>This week</h2>${selDay ? `<button data-day="${selDay}">Show all</button>` : `<span>${cards.length} picks for you</span>`}</div>
     <div class="deck" id="deck">${cards.map(cardHTML).join("")}</div>
+    ${itinerary(b)}
     <div class="sec"><h2>At a glance</h2></div>
     ${bento(b)}
     <div class="sec"><h2>On the map</h2><span>from Eindhoven Centraal</span></div>
@@ -565,13 +687,27 @@ function drawMap(b) {
     L.marker([a.lat, a.lng], { icon: L.divIcon({ className: "", html: '<div class="pin-also"></div>', iconSize: [12, 12] }) }).addTo(map)
       .bindTooltip(a.label, { direction: "top", offset: [0, -8] }).on("click", () => window.open(a.url, "_blank", "noopener"));
   });
+  const pins = [];
   (b.cards || []).forEach((c, i) => {
     if (c.lat == null) return;
     pts.push([c.lat, c.lng]);
-    L.marker([c.lat, c.lng], { icon: L.divIcon({ className: "", html: `<div class="pin ${stOf(c.id) === "done" ? "done" : ""}" style="--slot:var(--${slotOf(c)})"><b>${i + 1}</b></div>`, iconSize: [34, 34], iconAnchor: [17, 34] }), riseOnHover: true })
+    const m = L.marker([c.lat, c.lng], { icon: L.divIcon({ className: "", html: `<div class="pin ${stOf(c.id) === "done" ? "done" : ""}" style="--slot:var(--${slotOf(c)})"><b>${i + 1}</b></div>`, iconSize: [34, 34], iconAnchor: [17, 34] }), riseOnHover: true })
       .addTo(map).bindTooltip(c.place || c.name, { direction: "top", offset: [0, -36] }).on("click", () => openSheet(c.id));
+    pins.push([m, L.latLng(c.lat, c.lng)]);
   });
+  const declutter = () => {
+    const placed = [];
+    for (const [m, ll] of pins) {
+      const p = map.latLngToContainerPoint(ll);
+      const k = placed.filter(q => q.distanceTo(p) < 30).length;
+      const q = k ? p.add(L.point(Math.cos(k * 2.4 - 1.2) * 30, Math.sin(k * 2.4 - 1.2) * 30)) : p;
+      placed.push(p);
+      m.setLatLng(map.containerPointToLatLng(q));
+    }
+  };
   map.fitBounds(L.latLngBounds(pts).pad(0.18), { maxZoom: 15 });
+  declutter();
+  map.on("zoomend", declutter);
 }
 
 // ---------- Sheet ----------
@@ -607,6 +743,7 @@ function fillSheet(id) {
         <div class="gf">${icon(c.mode in MODES ? c.mode : "route")}<b>${c.minutes ? c.minutes + " min" : "Getting there"}${c.mode ? " · " + esc(MODES[c.mode] || c.mode) : ""}</b><span>${esc(c.travel)}</span></div>
         ${w ? `<div class="gf" style="grid-column:1/-1">${icon(WX(w.code)[0])}<b>${w.max}° · ${esc(WX(w.code)[1])}</b><span>${w.rain}% chance of rain that day</span></div>` : ""}
       </div>
+      ${rainy(c) ? `<div class="tip">${icon("umbrella")}Rain is likely that day (${rainy(c).rain}%). Bring a jacket, or go a bit earlier.</div>` : ""}
       <p class="why">${esc(c.why)}</p>
       <div class="doit">${icon("check")}<div><b>Do it</b>${esc(c.do)}</div></div>
       ${c.link && c.link.url ? `<a class="cta" href="${esc(c.link.url)}" target="_blank" rel="noopener">Open and book ${icon("arrow")}</a>` : ""}
@@ -653,12 +790,27 @@ addEventListener("popstate", () => closeSheet(true));
   sh.addEventListener("touchend", () => { if (y0 == null) return; sh.style.transition = ""; y0 = null; dy > 110 ? closeSheet() : (sh.style.transform = ""); });
 })();
 
+// ---------- Celebrate: a small burst in the plan's colour ----------
+function burst(x, y, color) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement("i");
+    p.className = "conf";
+    p.style.cssText = `left:${x}px;top:${y}px;background:${i % 3 ? color || "var(--accent)" : "#fff"}`;
+    document.body.append(p);
+    const a = Math.random() * Math.PI * 2, v = 70 + Math.random() * 150;
+    p.animate([{ transform: "translate(-50%,-50%) rotate(0)", opacity: 1 },
+               { transform: `translate(${Math.cos(a) * v}px, ${Math.sin(a) * v - 70}px) rotate(${Math.random() * 600}deg)`, opacity: 0 }],
+      { duration: 800 + Math.random() * 600, easing: "cubic-bezier(.2,.8,.2,1)" }).onfinish = () => p.remove();
+  }
+}
+
 // ---------- Saving ----------
 async function save(id, patch) {
   const before = ledger[id];
   ledger[id] = { ...(before || {}), ...patch, ...(patch.status && patch.status !== "done" ? { rating: "" } : {}) };
   haptic(); render();  // show it straight away, then write to GitHub
-  if (patch.status === "done") toast("Nice. How was it?", "check");
+  if (patch.status === "done") toast("Nice one. How was it?", "check");
   try {
     ledger = await backend.save(id, patch);
     render();
@@ -677,6 +829,7 @@ async function load() {
   if (!briefs.some(b => b.date === current)) current = null;
   ledger = await backend.ledger();
   render();
+  try { localStorage.setItem("life.cache", JSON.stringify({ briefs, ledger })); } catch (_) {}
 }
 
 // ---------- New week: start the workflow, poll until it finishes ----------
@@ -695,7 +848,8 @@ async function poll() {
   const g = $("gen");
   g.disabled = st.running; g.classList.toggle("busy", st.running);
   g.querySelector("span").textContent = st.running ? "Finding plans…" : "New week";
-  $("run").textContent = st.running ? "Scanning Eindhoven for you. Takes 5 to 15 minutes." : st.failed ? "The last search failed. See the Actions tab on GitHub." : "";
+  $("run").textContent = st.running ? "Scanning Eindhoven for you. Takes 5 to 15 minutes." : "";
+  $("warn").hidden = !st.failed;
   if (!st.running && wasRunning) { await load(); toast("Your new week is ready", "check"); }
   wasRunning = st.running;
   poll.t = setTimeout(poll, st.running ? 10000 : 60000);
@@ -721,7 +875,11 @@ document.addEventListener("click", async e => {
   const w = e.target.closest("[data-week]");
   if (w) { current = w.dataset.week; selDay = null; try { localStorage.setItem("life.week", current); } catch (_) {} render(); scrollTo({ top: 0, behavior: "smooth" }); return; }
   const s = e.target.closest("[data-s]");
-  if (s && sheetId) return save(sheetId, { status: stOf(sheetId) === s.dataset.s ? "open" : s.dataset.s });  // tap again to undo
+  if (s && sheetId) {
+    const next = stOf(sheetId) === s.dataset.s ? "open" : s.dataset.s;  // tap again to undo
+    if (next === "done") { const r = s.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, getComputedStyle($("sheet")).getPropertyValue("--slot").trim()); }
+    return save(sheetId, { status: next });
+  }
   const r = e.target.closest("[data-r]");
   if (r && sheetId) return save(sheetId, { rating: r.dataset.r });
   const ic = e.target.closest("[data-ics]");
@@ -748,7 +906,7 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => brie
 // ---------- Connect this device: a fine-grained GitHub key, stored on the device ----------
 function forgetToken() {
   token = null;
-  try { localStorage.removeItem("life.token"); } catch (e) {}
+  try { localStorage.removeItem("life.token"); localStorage.removeItem("life.cache"); } catch (e) {}
   askToken("expired");
 }
 function deviceName() {
@@ -806,10 +964,15 @@ function start() {
   if (!token) return askToken();
   $("gen").hidden = false;
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  try {
+    const cache = JSON.parse(localStorage.getItem("life.cache") || "null");
+    if (cache && cache.briefs && cache.briefs.length) { briefs = cache.briefs; ledger = cache.ledger || {}; render(); }
+  } catch (_) {}
   loadWeather();
   load().catch(e => { if (e.status !== 401) $("sub").textContent = "Could not load your week. Check the connection."; });
   poll();
 }
+setInterval(() => document.querySelectorAll("[data-cd]").forEach(el => el.textContent = countdown(parseStart(el.dataset.cd))), 60000);
 start();
 </script>
 </html>
