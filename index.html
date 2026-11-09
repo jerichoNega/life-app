@@ -25,6 +25,7 @@
   --accent: #FF5A36;
   --social: #FF5A36; --out: #A274FF; --food: #FFB224; --learn: #2BD4A4; --trip: #3D9BFF; --stretch: #E040FB;
   --read: #D9B88F; --hangout: #FFD23F; --habit: #B4F03C; --shop: #FF8FAB;
+  --eat: #FFB224; --k-deal: #2BD4A4; --k-hot: #FF5A36; --k-new: #3D9BFF; --k-event: #A274FF;
   --good: #2BD4A4;
   --r-lg: 26px; --r-md: 18px; --r-sm: 12px;
   --f-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
@@ -159,6 +160,47 @@ img.in { opacity: 1 !important; }
 .ex-habit .exb b { font-size: 1.35rem; }
 .ex-habit .exb span { color: rgba(16,20,10,.65); }
 .ex.s-done:not(.ex-habit) img { filter: grayscale(.8) brightness(.7); }
+
+/* ---------- Restaurants to try ---------- */
+.kinds { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: -2px -16px 12px; padding: 0 16px; }
+.kinds::-webkit-scrollbar { display: none; }
+.kinds button { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); font-size: .84rem; font-weight: 600; color: var(--muted);
+  display: inline-flex; align-items: center; gap: 7px; transition: background .2s, color .2s; }
+.kinds button i { width: 8px; height: 8px; border-radius: 50%; background: var(--k); }
+.kinds button small { font-weight: 500; opacity: .7; }
+.kinds button.on { background: var(--ink); color: var(--bg); }
+.eats { display: grid; grid-auto-flow: column; grid-auto-columns: min(72vw, 280px); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+  margin: 0 -16px; padding: 4px 16px 10px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.eats::-webkit-scrollbar { display: none; }
+@media (min-width: 900px) { .eats { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); grid-auto-columns: auto; margin: 0; padding: 4px 0; overflow: visible; } }
+.eat { scroll-snap-align: start; display: grid; grid-template-rows: auto 1fr; text-align: left; background: var(--surface); border-radius: var(--r-lg); overflow: hidden;
+  transition: transform .3s var(--ease); }
+.eat:hover { transform: translateY(-3px); }
+.eat:active { transform: scale(.98); }
+.eat .ph { position: relative; aspect-ratio: 4 / 3; overflow: hidden; isolation: isolate;
+  background: radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--k) 65%, #000), color-mix(in srgb, var(--k) 18%, #0b0a09) 80%); }
+.eat .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: opacity .5s, transform .8s var(--ease); }
+.eat:hover .ph img { transform: scale(1.04); }
+.eat .ph .glyph { position: absolute; right: -6%; top: 10%; width: 52%; color: rgba(255,255,255,.16); z-index: -2; stroke-width: 1.2; }
+.eat .ph .chip { position: absolute; top: 10px; left: 10px; height: 26px; font-size: .7rem; }
+.eat .ph .chip i { background: var(--k); box-shadow: 0 0 10px var(--k); }
+.eat .ph .badge { position: absolute; top: 10px; right: 10px; }
+.deal { position: absolute; left: 10px; right: 10px; bottom: 10px; padding: 7px 10px; border-radius: 12px; background: var(--k-deal); color: #062018;
+  font-size: .8rem; font-weight: 700; line-height: 1.25; }
+.deal span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.eat .tx { padding: 12px 14px 14px; display: grid; gap: 6px; align-content: start; }
+.eat .tx b { font: 750 1.15rem/1.15 var(--f-display); letter-spacing: -.01em; text-wrap: balance; }
+.eat .tx .bz { font-size: .84rem; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.eat .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.eat .meta span { display: inline-flex; align-items: center; gap: 4px; }
+.eat .meta svg { width: 13px; height: 13px; }
+.eat.s-done .ph img, .eat.s-skipped .ph img { filter: grayscale(.8) brightness(.7); }
+.eat.s-skipped { opacity: .5; }
+.dealbox { border-radius: var(--r-md); padding: 14px 16px; background: color-mix(in srgb, var(--k-deal) 18%, var(--surface)); display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.dealbox svg { color: var(--k-deal); margin-top: 2px; }
+.dealbox b { display: block; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--k-deal); margin-bottom: 2px; }
+.dealbox.dish { background: var(--surface); }
+.dealbox.dish svg, .dealbox.dish b { color: var(--eat); }
 
 /* ---------- Bento ---------- */
 .bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -375,6 +417,8 @@ img.in { opacity: 1 !important; }
   <symbol id="i-learn" viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L19 9l-4.1 2.6L16 17l-4-3-4 3 1.1-5.4L5 9l5.1-1.4z"/></symbol>
   <symbol id="i-trip" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2 0 1.5-4M15 21h2l-1.5-4"/><circle cx="9" cy="14" r=".6"/><circle cx="15" cy="14" r=".6"/></symbol>
   <symbol id="i-stretch" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-eat" viewBox="0 0 24 24"><path d="M5 3v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3M7 13v8M17 21V3c-2.5 1-4 4-4 8h4"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
   <symbol id="i-read" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7M9 11.5h5"/></symbol>
   <symbol id="i-hangout" viewBox="0 0 24 24"><path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 9.5h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 2 0 3M12 2.5c-.6 1 .6 2 0 3"/></symbol>
   <symbol id="i-habit" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
@@ -414,7 +458,12 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const icon = (name, cls = "i") => `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const SLOTS = { social: "Meet people", out: "Going out", food: "Food", learn: "Learn", trip: "Day trip", stretch: "Stretch",
-  read: "Book", hangout: "Hangout", habit: "Habit", shop: "Shop" };
+  read: "Book", hangout: "Hangout", habit: "Habit", shop: "Shop", eat: "To try" };
+// Restaurants to try live in `eats[]`, beside the plans: they get slot "eat" so the sheet and ledger treat them like cards
+const KINDS = { deal: "On deal", hot: "Hot right now", new: "Just opened", event: "Food event" };
+const eatsOf = b => (b.eats || []).map(e => (e.slot = "eat", e));
+const itemsOf = b => [...(b.cards || []), ...eatsOf(b)];
+let eatKind = "all";
 // Plans are dated things to go to; extras are the weekly book, spot, habit and shop
 const EXTRAS = new Set(["read", "hangout", "habit", "shop"]);
 const isExtra = c => EXTRAS.has(c.slot);
@@ -501,13 +550,13 @@ function ledgerRows(text) {
   }).filter(Boolean);
 }
 function cardOf(id) {
-  for (const b of briefs) for (const c of b.cards || []) if (c.id === id) return { added: b.date, c };
+  for (const b of briefs) for (const c of itemsOf(b)) if (c.id === id) return { added: b.date, c };
   return null;
 }
 function ledgerFrom(text) {
   const out = {};
   for (const { cells: [added, name, area, status, rating, note] } of ledgerRows(text))
-    for (const b of briefs) if (b.date === added) for (const c of b.cards || []) if (c.name === name)
+    for (const b of briefs) if (b.date === added) for (const c of itemsOf(b)) if (c.name === name)
       out[c.id] = { added, status, rating, note };
   return out;
 }
@@ -606,6 +655,30 @@ function extraHTML(c, i) {
     ${icon(s, "i glyph")}${img(c.image, c.name)}
     <span class="top"><span class="chip"><i></i>${esc(SLOTS[s])}</span>${st === "done" ? `<span class="badge done">${icon("check")}</span>` : ""}</span>
     <span class="exb"><b>${esc(c.name)}</b><span>${esc(sub)}</span></span></button>`;
+}
+
+function eatsHTML(b) {
+  const all = eatsOf(b);
+  if (!all.length) return "";
+  const kinds = Object.keys(KINDS).filter(k => all.some(e => e.kind === k));
+  const list = all.filter(e => eatKind === "all" || e.kind === eatKind);
+  const deals = all.filter(e => e.kind === "deal").length;
+  return `<div class="sec"><h2>Restaurants to try</h2><span>${deals ? `${deals} on deal · ` : ""}where Eindhoven is eating</span></div>
+    <div class="kinds" role="group" aria-label="Filter restaurants">
+      <button data-kind="all" class="${eatKind === "all" ? "on" : ""}" aria-pressed="${eatKind === "all"}">All <small>${all.length}</small></button>
+      ${kinds.map(k => `<button data-kind="${k}" class="${eatKind === k ? "on" : ""}" aria-pressed="${eatKind === k}" style="--k:var(--k-${k})"><i></i>${KINDS[k]} <small>${all.filter(e => e.kind === k).length}</small></button>`).join("")}
+    </div>
+    <div class="eats">${(list.length ? list : all).map((e, i) => {
+      const st = stOf(e.id), k = KINDS[e.kind] ? e.kind : "hot", d = parseStart(e.start);
+      return `<button class="eat s-${st} rise" style="--k:var(--k-${k});--slot:var(--eat);animation-delay:${i * 50}ms" data-open="${esc(e.id)}" aria-label="${esc(KINDS[k])}: ${esc(e.name)}">
+        <span class="ph">${icon("eat", "i glyph")}${img(e.image, e.name)}<span class="chip"><i></i>${esc(KINDS[k])}</span>
+          ${st === "done" ? `<span class="badge done">${icon("check")}</span>` : ""}
+          ${e.deal ? `<span class="deal"><span>${esc(e.deal)}</span></span>` : ""}</span>
+        <span class="tx"><b>${esc(e.name)}</b><span class="bz">${esc(e.buzz || e.dish || e.why)}</span>
+          <span class="meta"><span>${icon("euro")}${e.price_eur ? "~€" + e.price_eur + " pp" : esc(euro(e.price_eur))}</span>
+            ${e.minutes ? `<span>${icon(e.mode in MODES ? e.mode : "pin")}${e.minutes} min</span>` : ""}
+            ${d ? `<span>${icon("clock")}${esc(fmt(d, { weekday: "short" }))} ${d.getDate()}</span>` : e.cuisine ? `<span>${esc(e.cuisine)}</span>` : ""}</span></span></button>`;
+    }).join("")}</div>`;
 }
 
 function upNext(b) {
@@ -712,6 +785,7 @@ function render() {
     <div class="deck" id="deck">${plans.map(cardHTML).join("")}</div>
     ${extras.length ? `<div class="sec"><h2>Your extras</h2><span>a book, a spot, a habit, a shop</span></div>
     <div class="extras">${extras.map(extraHTML).join("")}</div>` : ""}
+    ${eatsHTML(b)}
     ${itinerary(b)}
     <div class="sec"><h2>At a glance</h2></div>
     ${bento(b)}
@@ -744,6 +818,13 @@ function drawMap(b) {
       .bindTooltip(a.label, { direction: "top", offset: [0, -8] }).on("click", () => window.open(a.url, "_blank", "noopener"));
   });
   const pins = [];
+  eatsOf(b).forEach(e => {
+    if (e.lat == null) return;
+    pts.push([e.lat, e.lng]);
+    const m = L.marker([e.lat, e.lng], { icon: L.divIcon({ className: "", html: `<div class="pin pin-x ${stOf(e.id) === "done" ? "done" : ""}" style="--slot:var(--k-${KINDS[e.kind] ? e.kind : "hot"})"><b>${icon("eat")}</b></div>`, iconSize: [34, 34], iconAnchor: [17, 34] }) })
+      .addTo(map).bindTooltip(e.name, { direction: "top", offset: [0, -36] }).on("click", () => openSheet(e.id));
+    pins.push([m, L.latLng(e.lat, e.lng)]);
+  });
   let n = 0;
   (b.cards || []).forEach(c => {
     const label = isExtra(c) ? icon(slotOf(c)) : ++n;
@@ -792,7 +873,7 @@ function fillSheet(id) {
   sh.classList.toggle("read", s === "read");
   sh.innerHTML = `
     <div class="sh-img">${s === "read" && c.image ? `<span class="exbg" style="background-image:url('${esc(c.image).replace(/'/g, "%27")}')"></span>` : ""}${icon(s, "i glyph")}${img(c.image, c.name)}<span class="grab" aria-hidden="true"></span>
-      <span class="chip"><i></i>${esc(SLOTS[s])}</span><button class="x" data-close aria-label="Close">${icon("x")}</button></div>
+      <span class="chip"><i></i>${esc(s === "eat" ? KINDS[c.kind] || SLOTS[s] : SLOTS[s])}</span><button class="x" data-close aria-label="Close">${icon("x")}</button></div>
     <div class="sh-body">
       <div><h2 id="sh-title">${esc(c.name)}</h2>${c.author ? `<p class="by">by ${esc(c.author)}</p>` : ""}</div>
       <div class="grid-facts">
@@ -803,15 +884,17 @@ function fillSheet(id) {
         ${w ? `<div class="gf" style="grid-column:1/-1">${icon(WX(w.code)[0])}<b>${w.max}° · ${esc(WX(w.code)[1])}</b><span>${w.rain}% chance of rain that day</span></div>` : ""}
       </div>
       ${rainy(c) ? `<div class="tip">${icon("umbrella")}Rain is likely that day (${rainy(c).rain}%). Bring a jacket, or go a bit earlier.</div>` : ""}
-      <p class="why">${esc(c.why)}</p>
-      <div class="doit">${icon("check")}<div><b>Do it</b>${esc(c.do)}</div></div>
+      ${c.deal ? `<div class="dealbox">${icon("tag")}<div><b>The deal</b>${esc(c.deal)}</div></div>` : ""}
+      ${c.dish ? `<div class="dealbox dish">${icon("eat")}<div><b>Order this</b>${esc(c.dish)}</div></div>` : ""}
+      <p class="why">${esc(c.why || c.buzz)}</p>
+      ${c.do ? `<div class="doit">${icon("check")}<div><b>Do it</b>${esc(c.do)}</div></div>` : ""}
       ${c.link && c.link.url ? `<a class="cta" href="${esc(c.link.url)}" target="_blank" rel="noopener">Open and book ${icon("arrow")}</a>` : ""}
       <div class="tools">
         ${c.where ? `<a class="tool" href="${esc(directions(c))}" target="_blank" rel="noopener">${icon("route")}Directions</a>` : `<button class="tool" disabled>${icon("route")}Directions</button>`}
         <button class="tool" data-ics="${esc(id)}" ${d ? "" : "disabled"}>${icon("cal")}Calendar</button>
         <button class="tool" data-share="${esc(id)}">${icon("share")}Invite</button>
       </div>
-      <div class="status"><span class="lbl">${s === "habit" ? "Did you do it?" : s === "read" ? "Did you read it?" : "Did you go?"}</span>
+      <div class="status"><span class="lbl">${s === "habit" ? "Did you do it?" : s === "read" ? "Did you read it?" : s === "eat" ? "Did you try it?" : "Did you go?"}</span>
         <div class="seg" role="group" aria-label="Status">
           ${[["done", "check", "Did it"], ["later", "later", "Later"], ["skipped", "skip", "Skip"]].map(([k, ic, l]) =>
             `<button data-s="${k}" class="${st === k ? "on" : ""}" aria-pressed="${st === k}">${icon(ic)}${l}</button>`).join("")}
@@ -925,6 +1008,8 @@ document.addEventListener("click", async e => {
   if (e.target.closest("[data-close]") || e.target === $("scrim")) return closeSheet();
   const o = e.target.closest("[data-open]");
   if (o) return openSheet(o.dataset.open);
+  const kd = e.target.closest("[data-kind]");
+  if (kd) { eatKind = eatKind === kd.dataset.kind ? "all" : kd.dataset.kind; return render(); }
   const dy = e.target.closest("[data-day]");
   if (dy) {
     selDay = selDay === dy.dataset.day ? null : dy.dataset.day; render();
